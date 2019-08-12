@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Shopify Installation Page</title>
+    <link href="style.css" rel="stylesheet"/>
+</head>
+<body>
+    <form>
+        <h1>Install Spod App</h1>
+
+        <ul class="permissions">
+            <li>Read / Write Orders</li>
+            <li>Manage Shop</li>
+        </ul>
+
+        <div class="terms">
+
+            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit...
+            </p>
+
+            <label>
+                <input required type="checkbox" value="ok"/> I accept the terms.
+            </label>
+
+            <button disabled>Install</button>
+        </div>
+    </form>
+
+    <div id="success" style="display: none">
+        Shopify app installed.
+    </div>
+
+    <script>
+        var form          = document.querySelector("form"),
+            termsAccepted = document.querySelector("input[type='checkbox']"),
+            install       = document.getElementsByTagName("button")[0],
+            success       = document.getElementById("success");
+
+        termsAccepted.onchange = function() {
+            install.disabled = !termsAccepted.checked;
+        };
+
+        form.onsubmit = function(e) {
+            e.preventDefault();
+
+            form.classList.add("loading");
+
+            installViaAjax(function(err, shopId) {
+                form.className = "";
+
+                if (!err) {
+                    form.parentNode.removeChild(form);
+                    success.style.display = "block";
+
+                    document.cookie = "shopId=" + shopId;
+                    window.shop = { id: shopId};
+                }
+            });
+        };
+
+        function installViaAjax(callback) {
+            setTimeout(function() {
+                callback(null, Math.random())
+            }, Math.random() * 5000);
+        }
+    </script>
+</body>
+</html>
